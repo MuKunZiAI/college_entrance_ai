@@ -34,3 +34,9 @@ college_entrance_ai/
 ├── api_service.py               # API服务，连接MySQL，Elasticsearch8，调用本地大模型
 └── README.md                    # 说明
 ```
+
+## 文档介绍
+
+- [AI Agent案例实践：三种智能体开发模式详解之一（手写代码）](https://mp.weixin.qq.com/s/T1FxAIlraY6mRPjOQ54raA)
+- [AI Agent案例实践：三种智能体开发模式详解之二（基于LangChain框架）](https://mp.weixin.qq.com/s/sQdO-_nNm8eH70ix9rpoWA)
+- [AI Agent案例实践：三种智能体开发模式详解之三（基于QwenAgent框架）](https://mp.weixin.qq.com/s/AYlyJKKNauFtw0e9QbMUBg)
