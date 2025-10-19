@@ -1,15 +1,66 @@
+import decimal
+import json
+from typing import Any, Dict
+
 import pymysql
 import requests
-import decimal
 from elasticsearch import Elasticsearch
-import json
+
+class Result:
+    def __init__(
+        self,
+        success: bool,
+        message: str = "",
+        code: int = 200,
+        data: Any = None
+    ):
+        self.success = success
+        self.message = message
+        self.code = code
+        self.data = data
+
+    @classmethod
+    def success(
+        cls,
+        data: Any = None,
+        message: str = "Success",
+        code: int = 200
+    ) -> "Result":
+        """构造成功结果"""
+        return cls(success=True, message=message, code=code, data=data)
+
+    @classmethod
+    def error(
+        cls,
+        message: str = "Error",
+        code: int = 500,
+        data: Any = None
+    ) -> "Result":
+        """构造失败结果"""
+        return cls(success=False, message=message, code=code, data=data)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """转换为字典，便于 JSON 序列化"""
+        return {
+            "success": self.success,
+            "message": self.message,
+            "code": self.code,
+            "data": self.data
+        }
+
+    def __repr__(self) -> str:
+        return f"Result(success={self.success}, code={self.code}, message='{self.message}', data={self.data})"
+
+    def __bool__(self) -> bool:
+        """支持 if result: 判断是否成功"""
+        return self.success
 
 # Query API
 class QueryService:
     def __init__(self):
         self.host = "127.0.0.1"
         self.username = "root"
-        self.password = "<your_password>"
+        self.password = "mysql123456"
         self.database = "chaiys"
 
     def query(self, sql):
@@ -72,7 +123,7 @@ class SemanticService:
     def __init__(self):
         self.es_client = Elasticsearch(
             hosts=["http://127.0.0.1:9200"],
-            basic_auth=("elastic", "<your_password>"),
+            basic_auth=("elastic", "elastic@!123"),
             verify_certs=False
         )
         # 向量化模型
@@ -159,7 +210,7 @@ class SemanticService:
             }
             for hit in response["hits"]["hits"]
         ]
-        print(f"自然语言语义检索字段成功，匹配到的元数据信息：{table_info}")
+        # print(f"自然语言语义检索字段成功，匹配到的元数据信息：{table_info}")
         return table_info
 
     def keyword_search(self, user_query: str, k) -> list:
@@ -209,7 +260,7 @@ class SemanticService:
             }
             for hit in response["hits"]["hits"]
         ]
-        print(f"自然语言分词搜索字段成功，匹配到的元数据信息：{table_info}")
+        # print(f"自然语言分词搜索字段成功，匹配到的元数据信息：{table_info}")
         return table_info
 
     def hybrid_search(self, user_query: str, k, alpha: float = 0.7) -> list:
@@ -243,7 +294,7 @@ class SemanticService:
         combined.sort(key=lambda x: x["combined_score"], reverse=True)
 
         table_info = combined[:k]
-        print(f"自然语言混合检索字段成功，匹配到的元数据信息：{table_info}")
+        # print(f"自然语言混合检索字段成功，匹配到的元数据信息：{table_info}")
         return table_info
 
 # Analysis API
@@ -251,17 +302,20 @@ class AnalysisService:
     def __init__(self):
         self.ollama_host = "http://localhost:11434/api/chat"
 
-    def analysis(self, prompt, model="deepseek-r1:32b"):
+    def analysis(self, prompt, model="deepseek-r1:32b", messages=None):
         # 发送POST请求
+        if messages is None:
+            messages = []
         str = ""
+        newMessages = messages[:]
+        newMessages.append({"role": "user", "content": prompt})
         # 请求数据
         data = {
             "model": model,
-            "messages": [
-                {"role": "user", "content": prompt}
-            ],
+            "messages": newMessages,
             "stream": True
         }
+        isThinking = False
         with requests.post(self.ollama_host, json=data, stream=True) as response:
             # 处理流式响应
             for line in response.iter_lines():
@@ -270,7 +324,13 @@ class AnalysisService:
                     try:
                         # 解析JSON数据
                         chunk = json.loads(decoded_line)
-                        str += chunk['message']['content']
+                        content = chunk['message']['content']
+                        if "<think>" in content:
+                            isThinking = True
+                        if "</think>" in content:
+                            isThinking = False
+                        if not isThinking and "</think>" not in content:
+                            str += chunk['message']['content']
                         # 打印消息内容
                         print(chunk['message']['content'], end='', flush=True)
                     except json.JSONDecodeError:
