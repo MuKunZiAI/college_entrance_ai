@@ -60,7 +60,7 @@ class QueryService:
     def __init__(self):
         self.host = "127.0.0.1"
         self.username = "root"
-        self.password = "mysql123456"
+        self.password = "<your_password>"
         self.database = "chaiys"
 
     def query(self, sql):
@@ -123,7 +123,7 @@ class SemanticService:
     def __init__(self):
         self.es_client = Elasticsearch(
             hosts=["http://127.0.0.1:9200"],
-            basic_auth=("elastic", "elastic@!123"),
+            basic_auth=("elastic", "<your_password>"),
             verify_certs=False
         )
         # 向量化模型
