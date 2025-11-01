@@ -22,17 +22,26 @@
 
 ```python
 college_entrance_ai/
-├── agentscope_code/             # `AgentScope框架`实现
-│   └── agent_service_react.py   # ReAct模式智能体
-├── langchain_code/              # `LangChain框架`实现
-│   ├── agent_service_react.py   # ReAct模式智能体
-│   └── agent_service_seq.py     # SequentialChain模式智能体
-├── manual_code/                 # `手写代码`实现
-│   └── agent_service.py         # 手写代码模式智能体
-├── qwenagent_code/              # `Qwen-Agent框架`实现
-│   └── agent_service_react.py   # ReAct模式智能体
-├── api_service.py               # API服务，连接MySQL，Elasticsearch8，调用本地大模型
-└── README.md                    # 说明
+├── agentscope_code/                # `AgentScope框架`实现
+│   ├── agent_service_react.py      # ReAct模式智能体
+│   └── agent_service_react_mm.py   # ReAct模式智能体，支持记忆
+├── langchain_code/                 # `LangChain框架`实现
+│   ├── agent_service_react.py      # ReAct模式智能体
+│   ├── agent_service_react_mm.py   # ReAct模式智能体,支持记忆
+│   ├── agent_service_seq.py        # SequentialChain模式智能体
+│   └── ollama_call.py              # 本地Ollama部署的模型调用测试
+├── manual_code/                    # `手写代码`实现
+│   ├── agent_service.py            # 手写代码模式智能体
+│   ├── agent_service_mm.py         # 手写代码模式智能体，支持记忆
+│   └── aollama_call.py             # 本地Ollama部署的模型调用测试
+├── qwenagent_code/                 # `Qwen-Agent框架`实现
+│   ├── agent_service_react.py      # ReAct模式智能体
+│   ├── agent_service_react_mm.py   # ReAct模式智能体，支持记忆
+│   ├── aollama_call.py             # 本地Ollama部署的模型调用测试
+│   └── qwenagent_api.py            # qwenagent流处理
+├── api_service.py                  # API服务，连接MySQL，Elasticsearch8，调用本地大模型
+├── message_manage.py               # 上下文记忆管理，内存版
+└── README.md                       # 说明
 ```
 
 ## 文档介绍
