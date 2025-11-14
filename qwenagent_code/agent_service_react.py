@@ -3,6 +3,7 @@ import json
 from qwen_agent.agents import Assistant
 from qwen_agent.tools import BaseTool
 from api_service import QueryService, SemanticService, AnalysisService
+from qwenagent_api import read_steam_response
 
 # 初始化服务
 queryService = QueryService()
@@ -70,30 +71,7 @@ def chat(user_query):
         messages = [{'role': 'user', 'content': user_query}]
         response_generator = agent.run(messages=messages)
         # 处理生成器响应
-        full_response = ''
-        start = 0
-        end = 0
-        for response in response_generator:
-            # 检查响应类型并适当处理
-            if isinstance(response, list):
-                # 如果是列表，提取内容
-                for item in response:
-                    if isinstance(item, dict) and 'content' in item:
-                        full_response = item['content']
-                        end = full_response.__len__()
-                    elif isinstance(item, str):
-                        full_response = item
-                        end = full_response.__len__()
-            elif isinstance(response, dict) and 'content' in response:
-                full_response = response['content']
-                end = full_response.__len__()
-            elif isinstance(response, str):
-                full_response = response
-                end = full_response.__len__()
-            print(f"{full_response[start:end]}", end="")
-            start = end
-
-        print(f"最终结果: {full_response}")
+        full_response = read_steam_response(response_generator)
         return full_response
     except Exception as e:
         print(f"执行过程中出错: {str(e)}")
