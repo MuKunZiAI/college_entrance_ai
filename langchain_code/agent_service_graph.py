@@ -137,7 +137,7 @@ def template_agent(state: State):
     }
 
 # ========================
-# 🪶 改写智能体（语义补全 / 追问修正）
+# 📌 改写智能体（语义补全 / 追问修正）
 # ========================
 def rewrite_agent(state: State):
     print("=== 🟨 Rewrite Agent ===")
@@ -231,10 +231,12 @@ def sql_agent(state: State):
     # 4. 执行查询
     result = queryService.query_with_column(sql)
     if result is None or len(result) == 0:
+        print("🔍 查询无结果。")
         return {
             "messages": [AIMessage(content="🔍 查询无结果。")],
             "next_agent": "end"
         }
+    print(f"🔍 查询成功，结果：{result}")
 
     # 5. 生成 SQL 模板（简单年份/数字替换）
     template_sql = re.sub(r'\b(19|20)\d{{2}}\b', '{year}', sql)  # 年份
@@ -313,7 +315,7 @@ workflow.add_conditional_edges(
     "template",
     route_to_next_agent,
     {
-        "rewrite": "rewrite",     # 新增 rewrite 分支
+        "rewrite": "rewrite",
         "sql": "sql",
         "analysis": "analysis",
         "__end__": END
