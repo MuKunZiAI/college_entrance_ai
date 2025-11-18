@@ -101,7 +101,6 @@ class TemplateAgent(AgentBase):
             """
             formatted = await self.formatter.format([
                 Msg("system", self.sys_prompt, "system"),
-                *history,
                 Msg("user", extract_prompt, "user"),
             ])
 
@@ -233,7 +232,6 @@ class SQLAgent(AgentBase):
 
         prompt = await self.formatter.format([
             Msg("system", self.sys_prompt + user_prompt, "system"),
-            *await self.memory.get_memory(),
         ])
 
         result = await self.model(prompt)
@@ -264,7 +262,8 @@ class SQLAgent(AgentBase):
         content = {
             "tableStruct": table_struct,
             "sql": sql,
-            "resultSet": resultSet
+            "resultSet": resultSet,
+            "user_query": user_query,
         }
         return Msg(self.name, json.dumps(content, ensure_ascii=False), role="assistant")
 
@@ -292,6 +291,7 @@ class AnalysisAgent(AgentBase):
             print(f"💥无有效数据进行分析：{msg.content}")
             return Msg(self.name, "无有效数据进行分析", role="assistant")
         data = json.loads(msg.content)
+        user_query = data["user_query"]
         if not isinstance(data, dict) or 'sql' not in data:
             print(f"💥无有效数据进行分析：{msg.content}")
             return Msg(self.name, "无有效数据进行分析", role="assistant")
@@ -304,7 +304,7 @@ class AnalysisAgent(AgentBase):
         """
         prompt = await self.formatter.format([
             Msg("system", self.sys_prompt + user_prompt, "system"),
-            *await self.memory.get_memory(),
+            Msg("user", user_query, "user"),
         ])
         result = await self.model(prompt)
         final_res = await get_response(result)
