@@ -166,14 +166,10 @@ class RewriteAgent(AgentBase):
 
         # 从记忆中取出历史上下文
         history = await self.memory.get_memory()
-        context_intent = state.get("original_intent") or "未知意图"
 
         # 构造 prompt
         user_prompt = f"""
             用户的问题可能是不完整的追问或模糊描述，请结合上下文补全成一个清晰的问题。
-
-            【上下文信息】
-            - 原始意图: {context_intent}
 
             【当前问题】
             "{user_query}"

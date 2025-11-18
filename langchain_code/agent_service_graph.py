@@ -142,16 +142,11 @@ def template_agent(state: State):
 def rewrite_agent(state: State):
     print("=== 🟨 Rewrite Agent ===")
     current_query = state["messages"][-1].content
-    context_intent = state.get("original_intent") or "未知意图"
-    history_struct = state.get("known_table_struct") or "未知表结构"
+    history = state["messages"]
 
     rewrite_prompt = f"""
         你是一个问题改写专家。
         用户的问题可能是不完整的追问或模糊描述，请结合上下文补全成一个清晰的问题。
-
-        【上下文信息】
-        - 原始意图: {context_intent}
-        - 已知表结构: {history_struct}
 
         【当前问题】
         "{current_query}"
@@ -165,6 +160,7 @@ def rewrite_agent(state: State):
 
     response = llm.invoke([
         SystemMessage(content=rewrite_prompt),
+        *history,
         HumanMessage(content=current_query)
     ])
     rewritten = remove_think_content(response.content)
