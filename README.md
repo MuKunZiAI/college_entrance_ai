@@ -53,3 +53,9 @@ college_entrance_ai/
 - [AI Agent案例实践：三种智能体开发模式详解之三（基于QwenAgent框架）](https://mp.weixin.qq.com/s/AYlyJKKNauFtw0e9QbMUBg)
 
 - [AI Agent案例实践：智能体开发模式详解之四（基于AgentScope框架）](https://mp.weixin.qq.com/s/IrjQpe48nvzQWAWF9_rxGQ)
+
+- [几种AI Agent开发框架对比：相比手写代码是否更便捷？](https://mp.weixin.qq.com/s/usHSax8to_VNhnWMZHX6bA)
+
+- [多智能体协作案例实践（一）：基于AgentScope框架](https://mp.weixin.qq.com/s/O9wC9aU3iQ98Wij6C-AvWw)
+
+- [多智能体协作案例实践（二）：基于LangGraph框架](https://mp.weixin.qq.com/s/0pfVEeESi-UBYhHqmSNZaQ)
