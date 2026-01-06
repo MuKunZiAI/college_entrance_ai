@@ -23,9 +23,11 @@
 ```python
 college_entrance_ai/
 ├── agentscope_code/                # `AgentScope框架`实现
+│   ├── agent_service_pipeline.py   # AgentScope管道模式多智能体协作
 │   ├── agent_service_react.py      # ReAct模式智能体
 │   └── agent_service_react_mm.py   # ReAct模式智能体，支持记忆
 ├── langchain_code/                 # `LangChain框架`实现
+│   ├── agent_service_graph.py      # LangGraph模式多智能体协作
 │   ├── agent_service_react.py      # ReAct模式智能体
 │   ├── agent_service_react_mm.py   # ReAct模式智能体,支持记忆
 │   ├── agent_service_seq.py        # SequentialChain模式智能体
